@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 //express routes
-app.use("/", userRoutes);
+app.use("/api/v1/users/", userRoutes);
 
 // global middleware for handel error
 app.use((error, req, res, next) => {

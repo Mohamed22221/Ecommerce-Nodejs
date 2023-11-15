@@ -3,9 +3,10 @@ import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import sendError from "../utils/classError.js";
 import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
+import generateToken from "../utils/generateJWT.js";
 
 //@desc Controll regester
-//@route Post api/vi/users/regester
+//@route Post api/v1/users/regester
 //@access Private/admin
 
 export const regesterUser = asyncWrapper(async (req, res, next) => {
@@ -30,7 +31,7 @@ export const regesterUser = asyncWrapper(async (req, res, next) => {
 });
 
 //@desc Controll login
-//@route Post api/vi/users/login
+//@route Post api/v1/users/login
 //@access Public
 
 export const loginUser = asyncWrapper(async (req, res, next) => {
@@ -43,13 +44,28 @@ export const loginUser = asyncWrapper(async (req, res, next) => {
   }
   const matchedPassword = await bcrypt.compare(password, userFound?.password);
   if (userFound && matchedPassword === true) {
+    const token = await generateToken({
+      email: userFound.email,
+      _id: userFound._id,
+    });
     return res.status(200).json({
       status: "success",
       message: "User logged in successfully",
-      data: userFound,
+      data: { user: userFound , token},
     });
   } else {
     const error = sendError.create(400, ERROR, "Invalid login");
     return next(error);
   }
+});
+
+//@desc Controll profile
+//@route get api/v1/users/profile
+//@access Private
+export const profileUser = asyncWrapper(async (req, res, next) => {
+  res.status(200).json({
+    status: SUCCESS,
+    message: "Welcom profile page",
+    data: null,
+  });
 });
