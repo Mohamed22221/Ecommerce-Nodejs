@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import sendError from "../utils/classError.js";
 import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
 import generateToken from "../utils/generateJWT.js";
+import verifyToken from "../utils/verifyToken.js";
 
 //@desc Controll regester
 //@route Post api/v1/users/regester
@@ -63,6 +64,7 @@ export const loginUser = asyncWrapper(async (req, res, next) => {
 //@route get api/v1/users/profile
 //@access Private
 export const profileUser = asyncWrapper(async (req, res, next) => {
+
   res.status(200).json({
     status: SUCCESS,
     message: "Welcom profile page",
