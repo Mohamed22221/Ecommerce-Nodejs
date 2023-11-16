@@ -15,6 +15,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 var productsRoutes = _express["default"].Router();
 
-productsRoutes.post("/", _verifyToken["default"], _productsController.createProduct);
+productsRoutes.route("/").get(_productsController.getAllProducts).post(_verifyToken["default"], _productsController.createProduct);
 var _default = productsRoutes;
 exports["default"] = _default;
