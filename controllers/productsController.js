@@ -14,11 +14,46 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
   const limit = 6;
   const page = query.page || 1;
   const skip = (page - 1) * limit;
-  //handel courses and pagination
-  const products = await Product
-    .find({}, { __v: false })
-    .limit(limit)
-    .skip(skip);
+  let productQuiry = Product.find().limit(limit).skip(skip);
+  //filter by name
+  if (query.name) {
+    productQuiry = productQuiry.find({
+      name: { $regex: query.name, $options: "i" },
+    });
+  }
+  //filter by brand
+  if (query.brand) {
+    productQuiry = productQuiry.find({
+      brand: { $regex: query.brand, $options: "i" },
+    });
+  }
+  //filter by category
+  if (query.category) {
+    productQuiry = productQuiry.find({
+      category: { $regex: query.category, $options: "i" },
+    });
+  }
+  //filter by sizes
+  if (query.size) {
+    productQuiry = productQuiry.find({
+      sizes: { $regex: query.size, $options: "i" },
+    });
+  }
+  //filter by color
+  if (query.color) {
+    productQuiry = productQuiry.find({
+      colors: { $regex: query.color, $options: "i" },
+    });
+  }
+  //filter by color
+  if (query.price) {
+    const rangePrice = query.price.split("-");
+    productQuiry = productQuiry.find({
+      price: { $gte: rangePrice[0], $lte: rangePrice[1] },
+    });
+  }
+  //return products
+  const products = await productQuiry;
 
   res.json({
     status: SUCCESS,
