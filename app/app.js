@@ -3,6 +3,7 @@ import dbConnect from "../config/dbConnect.js";
 import dotenv from "dotenv";
 import userRoutes from "../routes/usersRoutes.js";
 import { ERROR } from "../utils/httpStatus.js";
+import productsRoutes from "../routes/productsRoutes..js";
 // setup local env
 dotenv.config();
 //db connect
@@ -12,10 +13,12 @@ app.use(express.json());
 
 //express routes
 app.use("/api/v1/users/", userRoutes);
+app.use("/api/v1/products/", productsRoutes);
+
 
 // global middleware for handel error
 app.use((error, req, res, next) => {
-  res.status(error.statusCode || 500).json({
+  res.status(error.statusCode || 400).json({
     status: error.status || ERROR,
     message: error.message,
     data: null,
