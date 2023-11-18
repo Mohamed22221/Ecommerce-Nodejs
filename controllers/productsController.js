@@ -1,4 +1,5 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
+import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 
 import sendError from "../utils/classError.js";
@@ -85,11 +86,17 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
     totalQty,
   } = req.body;
   //check exist user
-  const exist = await Product.findOne({ name });
-  if (exist) {
+  const existProduct = await Product.findOne({ name });
+  if (existProduct) {
     const error = sendError.create(400, ERROR, "Product already exist");
     return next(error);
   }
+  const categoryFound = await Category.findOne({ name: category });
+  if (!categoryFound) {
+    const error = sendError.create(400, ERROR, "Category not found");
+    return next(error);
+  }
+
   const product = await Product.create({
     name,
     description,
@@ -101,6 +108,9 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
     price,
     totalQty,
   });
+  // push product in the same category
+  categoryFound.products.push({ name, brand, category });
+  await categoryFound.save();
   res.status(201).json({
     status: SUCCESS,
     message: "Product created successfully",
