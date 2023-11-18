@@ -5,7 +5,6 @@ import sendError from "../utils/classError.js";
 import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
 import handelPagination from "../utils/pagination.js";
 
-
 //@desc Controll get categories
 //@route Get api/v1/categories
 //@access Public/users
@@ -53,4 +52,62 @@ export const createCategory = asyncWrapper(async (req, res, next) => {
   });
 });
 
+//@desc Controll get category
+//@route Get api/v1/categories/:id
+//@access Public/users
 
+export const getCategory = asyncWrapper(async (req, res, next) => {
+  const dynamicId = req.params.id;
+  const category = await Category.findById(dynamicId);
+
+  if (!category) {
+    const error = sendError.create(404, FAIL, "Category not found ");
+    return next(error);
+  }
+  res.json({
+    status: SUCCESS,
+    message: "Category found successfully",
+    data: { category },
+  });
+});
+
+//@desc Controll update category
+//@route Put api/v1/categories/:id
+//@access Private/users
+
+export const updateCategory = asyncWrapper(async (req, res, next) => {
+  const dynamicId = req.params.id;
+  const category = await Category.findByIdAndUpdate(
+    dynamicId,
+    { ...req.body },
+    { new: true }
+  );
+  if (!category) {
+    const error = sendError.create(404, FAIL, "Category not found ");
+    return next(error);
+  }
+
+  res.json({
+    status: SUCCESS,
+    message: "Category updated successfully",
+    data: { category },
+  });
+});
+
+//@desc Controll delete product
+//@route Put api/v1/categories/:id
+//@access Private/users
+
+export const deleteCategory = asyncWrapper(async (req, res, next) => {
+  const dynamicId = req.params.id;
+  const category = await Category.findByIdAndDelete(dynamicId);
+  if (!category) {
+    const error = sendError.create(404, FAIL, "Category not found ");
+    return next(error);
+  }
+
+  res.json({
+    status: SUCCESS,
+    message: "Category deleted successfully",
+  });
+});

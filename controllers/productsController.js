@@ -150,7 +150,7 @@ export const updateProduct = asyncWrapper(async (req, res, next) => {
   });
 });
 
-//@desc Controll update product
+//@desc Controll delete product
 //@route Put api/v1/products/:id
 //@access Private/users
 
