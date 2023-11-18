@@ -17,6 +17,8 @@ var _httpStatus = require("../utils/httpStatus.js");
 
 var _productsRoutes = _interopRequireDefault(require("../routes/productsRoutes..js"));
 
+var _CategoriesRoutes = _interopRequireDefault(require("../routes/CategoriesRoutes.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 // setup local env
@@ -28,7 +30,8 @@ var app = (0, _express["default"])();
 app.use(_express["default"].json()); //express routes
 
 app.use("/api/v1/users/", _usersRoutes["default"]);
-app.use("/api/v1/products/", _productsRoutes["default"]); // global middleware for handel error
+app.use("/api/v1/products/", _productsRoutes["default"]);
+app.use("/api/v1/categories/", _CategoriesRoutes["default"]); // global middleware for handel error
 
 app.use(function (error, req, res, next) {
   res.status(error.statusCode || 400).json({
