@@ -11,10 +11,27 @@ import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
 export const getAllProducts = asyncWrapper(async (req, res) => {
   //handel pagination
   const query = req.query;
-  const limit = 6;
-  const page = query.page || 1;
-  const skip = (page - 1) * limit;
-  let productQuiry = Product.find().limit(limit).skip(skip);
+  const limit = parseInt(query.limit) || 6;
+  const page = parseInt(query.page)  || 1;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit
+  const total = await Product.countDocuments()
+  let productQuiry = Product.find().limit(limit).skip(startIndex);
+  //pagination results
+  const results = {};
+  if (endIndex < total) {
+    results.next = {
+      page: page + 1,
+      limit: limit
+    };
+  }
+
+  if (startIndex > 0) {
+    results.previous = {
+      page: page - 1,
+      limit: limit
+    };
+  }
   //filter by name
   if (query.name) {
     productQuiry = productQuiry.find({
@@ -45,9 +62,9 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
       colors: { $regex: query.color, $options: "i" },
     });
   }
-  //filter by color
+  //filter by price
   if (query.price) {
-    const rangePrice = query.price.split("-");
+    const rangePrice = query.price.split("-")
     productQuiry = productQuiry.find({
       price: { $gte: rangePrice[0], $lte: rangePrice[1] },
     });
@@ -58,6 +75,9 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
   res.json({
     status: SUCCESS,
     message: "Get products successfully",
+    total,
+    results : products.length,
+    pagination : results,
     data: { products },
   });
 });
@@ -98,5 +118,6 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
     status: SUCCESS,
     message: "Product created successfully",
     data: { product },
+
   });
 });
