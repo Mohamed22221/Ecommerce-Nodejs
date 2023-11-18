@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createProduct = exports.getAllProducts = void 0;
+exports.deleteProduct = exports.updateProduct = exports.getProduct = exports.createProduct = exports.getAllProducts = void 0;
 
 var _asyncWrapper = _interopRequireDefault(require("../middlewares/asyncWrapper.js"));
 
@@ -15,9 +15,15 @@ var _httpStatus = require("../utils/httpStatus.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //@desc Controll get products
-//@route get api/v1/products
-//@access public/users
+//@route Get api/v1/products
+//@access Public/users
 var getAllProducts = (0, _asyncWrapper["default"])(function _callee(req, res) {
   var query, limit, page, startIndex, endIndex, total, productQuiry, results, rangePrice, products;
   return regeneratorRuntime.async(function _callee$(_context) {
@@ -35,7 +41,9 @@ var getAllProducts = (0, _asyncWrapper["default"])(function _callee(req, res) {
 
         case 7:
           total = _context.sent;
-          productQuiry = _Product["default"].find().limit(limit).skip(startIndex); //pagination results
+          productQuiry = _Product["default"].find({}, {
+            __v: false
+          }).limit(limit).skip(startIndex); //pagination results
 
           results = {};
 
@@ -197,5 +205,127 @@ var createProduct = (0, _asyncWrapper["default"])(function _callee2(req, res, ne
       }
     }
   });
-});
+}); //@desc Controll get product
+//@route Get api/v1/products/:id
+//@access Public/users
+
 exports.createProduct = createProduct;
+var getProduct = (0, _asyncWrapper["default"])(function _callee3(req, res, next) {
+  var dynamicId, product, error;
+  return regeneratorRuntime.async(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          dynamicId = req.params.id;
+          _context3.next = 3;
+          return regeneratorRuntime.awrap(_Product["default"].findById(dynamicId));
+
+        case 3:
+          product = _context3.sent;
+
+          if (product) {
+            _context3.next = 7;
+            break;
+          }
+
+          error = _classError["default"].create(404, _httpStatus.FAIL, "Product not found ");
+          return _context3.abrupt("return", next(error));
+
+        case 7:
+          res.json({
+            status: _httpStatus.SUCCESS,
+            message: "Product found successfully",
+            data: {
+              product: product
+            }
+          });
+
+        case 8:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+}); //@desc Controll update product
+//@route Put api/v1/products/:id
+//@access Private/users
+
+exports.getProduct = getProduct;
+var updateProduct = (0, _asyncWrapper["default"])(function _callee4(req, res, next) {
+  var dynamicId, product, error;
+  return regeneratorRuntime.async(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          dynamicId = req.params.id;
+          _context4.next = 3;
+          return regeneratorRuntime.awrap(_Product["default"].findByIdAndUpdate(dynamicId, _objectSpread({}, req.body), {
+            "new": true
+          }));
+
+        case 3:
+          product = _context4.sent;
+
+          if (product) {
+            _context4.next = 7;
+            break;
+          }
+
+          error = _classError["default"].create(404, _httpStatus.FAIL, "Product not found ");
+          return _context4.abrupt("return", next(error));
+
+        case 7:
+          res.json({
+            status: _httpStatus.SUCCESS,
+            message: "Product updated successfully",
+            data: {
+              product: product
+            }
+          });
+
+        case 8:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+}); //@desc Controll update product
+//@route Put api/v1/products/:id
+//@access Private/users
+
+exports.updateProduct = updateProduct;
+var deleteProduct = (0, _asyncWrapper["default"])(function _callee5(req, res, next) {
+  var dynamicId, product, error;
+  return regeneratorRuntime.async(function _callee5$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          dynamicId = req.params.id;
+          _context5.next = 3;
+          return regeneratorRuntime.awrap(_Product["default"].findByIdAndDelete(dynamicId));
+
+        case 3:
+          product = _context5.sent;
+
+          if (product) {
+            _context5.next = 7;
+            break;
+          }
+
+          error = _classError["default"].create(404, _httpStatus.FAIL, "Product not found ");
+          return _context5.abrupt("return", next(error));
+
+        case 7:
+          res.json({
+            status: _httpStatus.SUCCESS,
+            message: "Product deleted successfully"
+          });
+
+        case 8:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  });
+});
+exports.deleteProduct = deleteProduct;

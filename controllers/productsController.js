@@ -5,31 +5,33 @@ import sendError from "../utils/classError.js";
 import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
 
 //@desc Controll get products
-//@route get api/v1/products
-//@access public/users
+//@route Get api/v1/products
+//@access Public/users
 
 export const getAllProducts = asyncWrapper(async (req, res) => {
   //handel pagination
   const query = req.query;
   const limit = parseInt(query.limit) || 6;
-  const page = parseInt(query.page)  || 1;
+  const page = parseInt(query.page) || 1;
   const startIndex = (page - 1) * limit;
-  const endIndex = page * limit
-  const total = await Product.countDocuments()
-  let productQuiry = Product.find().limit(limit).skip(startIndex);
+  const endIndex = page * limit;
+  const total = await Product.countDocuments();
+  let productQuiry = Product.find({}, { __v: false })
+    .limit(limit)
+    .skip(startIndex);
   //pagination results
   const results = {};
   if (endIndex < total) {
     results.next = {
       page: page + 1,
-      limit: limit
+      limit: limit,
     };
   }
 
   if (startIndex > 0) {
     results.previous = {
       page: page - 1,
-      limit: limit
+      limit: limit,
     };
   }
   //filter by name
@@ -64,7 +66,7 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
   }
   //filter by price
   if (query.price) {
-    const rangePrice = query.price.split("-")
+    const rangePrice = query.price.split("-");
     productQuiry = productQuiry.find({
       price: { $gte: rangePrice[0], $lte: rangePrice[1] },
     });
@@ -76,8 +78,8 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
     status: SUCCESS,
     message: "Get products successfully",
     total,
-    results : products.length,
-    pagination : results,
+    results: products.length,
+    pagination: results,
     data: { products },
   });
 });
@@ -118,6 +120,65 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
     status: SUCCESS,
     message: "Product created successfully",
     data: { product },
+  });
+});
 
+//@desc Controll get product
+//@route Get api/v1/products/:id
+//@access Public/users
+
+export const getProduct = asyncWrapper(async (req, res, next) => {
+  const dynamicId = req.params.id;
+  const product = await Product.findById(dynamicId);
+
+  if (!product) {
+    const error = sendError.create(404, FAIL, "Product not found ");
+    return next(error);
+  }
+  res.json({
+    status: SUCCESS,
+    message: "Product found successfully",
+    data: { product },
+  });
+});
+
+//@desc Controll update product
+//@route Put api/v1/products/:id
+//@access Private/users
+
+export const updateProduct = asyncWrapper(async (req, res, next) => {
+  const dynamicId = req.params.id;
+  const product = await Product.findByIdAndUpdate(
+    dynamicId,
+    { ...req.body },
+    { new: true }
+  );
+  if (!product) {
+    const error = sendError.create(404, FAIL, "Product not found ");
+    return next(error);
+  }
+
+  res.json({
+    status: SUCCESS,
+    message: "Product updated successfully",
+    data: { product },
+  });
+});
+
+//@desc Controll update product
+//@route Put api/v1/products/:id
+//@access Private/users
+
+export const deleteProduct = asyncWrapper(async (req, res, next) => {
+  const dynamicId = req.params.id;
+  const product = await Product.findByIdAndDelete(dynamicId);
+  if (!product) {
+    const error = sendError.create(404, FAIL, "Product not found ");
+    return next(error);
+  }
+
+  res.json({
+    status: SUCCESS,
+    message: "Product deleted successfully",
   });
 });
