@@ -3,11 +3,37 @@ import Category from "../model/Category.js";
 
 import sendError from "../utils/classError.js";
 import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
+import handelPagination from "../utils/pagination.js";
 
+
+//@desc Controll get categories
+//@route Get api/v1/categories
+//@access Public/users
+
+export const getAllCategories = asyncWrapper(async (req, res, next) => {
+  //handel pagination
+  const query = req.query;
+  const total = await Category.countDocuments();
+  const { limit, startIndex, results } = handelPagination(query, total);
+  //check exist user
+  const categories = await Category.find({}, { __v: false })
+    .limit(limit)
+    .skip(startIndex);
+
+  res.status(201).json({
+    status: SUCCESS,
+    message: "Get categories successfully",
+    total,
+    results: categories.length,
+    pagination: results,
+    data: { categories },
+  });
+});
 
 //@desc Controll create Category
 //@route Post api/v1/categories
 //@access Private/admin
+
 export const createCategory = asyncWrapper(async (req, res, next) => {
   const { name } = req.body;
   //check exist user
@@ -26,3 +52,5 @@ export const createCategory = asyncWrapper(async (req, res, next) => {
     data: { category },
   });
 });
+
+

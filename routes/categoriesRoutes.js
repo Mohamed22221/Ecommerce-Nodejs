@@ -1,10 +1,15 @@
 import express from "express";
 import verifyToken from "../utils/verifyToken.js";
-import { createCategory } from "../controllers/categoriesController.js";
+import {
+  createCategory,
+  getAllCategories,
+} from "../controllers/categoriesController.js";
 
 const categoriesRoutes = express.Router();
 
-categoriesRoutes.route("/").post(verifyToken, createCategory);
-
+categoriesRoutes
+  .route("/")
+  .get(getAllCategories)
+  .post(verifyToken, createCategory);
 
 export default categoriesRoutes;

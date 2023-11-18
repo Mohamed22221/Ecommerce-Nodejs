@@ -3,6 +3,7 @@ import Product from "../model/Product.js";
 
 import sendError from "../utils/classError.js";
 import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
+import handelPagination from "../utils/pagination.js";
 
 //@desc Controll get products
 //@route Get api/v1/products
@@ -11,29 +12,13 @@ import { ERROR, FAIL, SUCCESS } from "../utils/httpStatus.js";
 export const getAllProducts = asyncWrapper(async (req, res) => {
   //handel pagination
   const query = req.query;
-  const limit = parseInt(query.limit) || 6;
-  const page = parseInt(query.page) || 1;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
   const total = await Product.countDocuments();
+  const { limit, startIndex, results } = handelPagination(query, total);
+
   let productQuiry = Product.find({}, { __v: false })
     .limit(limit)
     .skip(startIndex);
-  //pagination results
-  const results = {};
-  if (endIndex < total) {
-    results.next = {
-      page: page + 1,
-      limit: limit,
-    };
-  }
 
-  if (startIndex > 0) {
-    results.previous = {
-      page: page - 1,
-      limit: limit,
-    };
-  }
   //filter by name
   if (query.name) {
     productQuiry = productQuiry.find({
