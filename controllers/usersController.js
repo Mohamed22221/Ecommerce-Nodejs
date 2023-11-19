@@ -52,7 +52,7 @@ export const loginUser = asyncWrapper(async (req, res, next) => {
     return res.status(200).json({
       status: "success",
       message: "User logged in successfully",
-      data: { user: userFound , token},
+      data: { user: userFound, token },
     });
   } else {
     const error = sendError.create(400, ERROR, "Invalid login");
@@ -64,10 +64,19 @@ export const loginUser = asyncWrapper(async (req, res, next) => {
 //@route get api/v1/users/profile
 //@access Private
 export const profileUser = asyncWrapper(async (req, res, next) => {
-
+  const userId = await req.currentUser;
+  //check found user
+  const userFound = await User.findOne({
+    email: userId.email,
+    __id: userId.__id,
+  });
+  if (!userFound) {
+    const error = sendError.create(400, ERROR, "Not found user ");
+    return next(error);
+  }
   res.status(200).json({
     status: SUCCESS,
     message: "Welcom profile page",
-    data: null,
+    data: userFound,
   });
 });
