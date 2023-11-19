@@ -111,6 +111,7 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
   // push product in the same category
   categoryFound.products.push({ name, brand, category });
   await categoryFound.save();
+  
   res.status(201).json({
     status: SUCCESS,
     message: "Product created successfully",

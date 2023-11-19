@@ -42,7 +42,7 @@ export const createCategory = asyncWrapper(async (req, res, next) => {
     return next(error);
   }
   const category = await Category.create({
-    name,
+    name: name.toLowerCase(),
     userID: req.currentUser._id,
   });
   res.status(201).json({
