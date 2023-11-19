@@ -25,7 +25,7 @@ export const getAllBrands = asyncWrapper(async (req, res) => {
     total,
     results: brands.length,
     pagination: results,
-    data: { brands },
+    data:  brands ,
   });
 });
 
@@ -48,7 +48,7 @@ export const createBrands = asyncWrapper(async (req, res, next) => {
   res.status(201).json({
     status: SUCCESS,
     message: "Brand created successfully",
-    data: { brand },
+    data:  brand ,
   });
 });
 
@@ -67,7 +67,7 @@ export const getBrand = asyncWrapper(async (req, res, next) => {
   res.json({
     status: SUCCESS,
     message: "Brand found successfully",
-    data: { brand },
+    data:  brand ,
   });
 });
 

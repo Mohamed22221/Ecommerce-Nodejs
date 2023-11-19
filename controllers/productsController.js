@@ -1,4 +1,5 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
+import Brand from "../model/Brand.js";
 import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 
@@ -66,7 +67,7 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
     total,
     results: products.length,
     pagination: results,
-    data: { products },
+    data:  products ,
   });
 });
 
@@ -81,7 +82,6 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
     category,
     sizes,
     colors,
-    user,
     price,
     totalQty,
   } = req.body;
@@ -93,7 +93,21 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
   }
   const categoryFound = await Category.findOne({ name: category });
   if (!categoryFound) {
-    const error = sendError.create(400, ERROR, "Category not found");
+    const error = sendError.create(
+      400,
+      ERROR,
+      "Category not found , please create category first or check category name  "
+    );
+    return next(error);
+  }
+
+  const brandFound = await Brand.findOne({ name: brand });
+  if (!brandFound) {
+    const error = sendError.create(
+      400,
+      ERROR,
+      "Brand not found , please create brand first or check brand name  "
+    );
     return next(error);
   }
 
@@ -111,11 +125,15 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
   // push product in the same category
   categoryFound.products.push({ name, brand, category });
   await categoryFound.save();
-  
+
+  // push product in the same brand
+  brandFound.products.push({ name, brand, category });
+  await brandFound.save();
+
   res.status(201).json({
     status: SUCCESS,
     message: "Product created successfully",
-    data: { product },
+    data:  product ,
   });
 });
 
@@ -134,7 +152,7 @@ export const getProduct = asyncWrapper(async (req, res, next) => {
   res.json({
     status: SUCCESS,
     message: "Product found successfully",
-    data: { product },
+    data:  product ,
   });
 });
 
@@ -157,7 +175,7 @@ export const updateProduct = asyncWrapper(async (req, res, next) => {
   res.json({
     status: SUCCESS,
     message: "Product updated successfully",
-    data: { product },
+    data:  product ,
   });
 });
 

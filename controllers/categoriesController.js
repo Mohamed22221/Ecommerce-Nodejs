@@ -25,7 +25,7 @@ export const getAllCategories = asyncWrapper(async (req, res, next) => {
     total,
     results: categories.length,
     pagination: results,
-    data: { categories },
+    data:  categories ,
   });
 });
 
@@ -48,7 +48,7 @@ export const createCategory = asyncWrapper(async (req, res, next) => {
   res.status(201).json({
     status: SUCCESS,
     message: "Category created successfully",
-    data: { category },
+    data:  category ,
   });
 });
 
@@ -67,7 +67,7 @@ export const getCategory = asyncWrapper(async (req, res, next) => {
   res.json({
     status: SUCCESS,
     message: "Category found successfully",
-    data: { category },
+    data:  category ,
   });
 });
 
@@ -90,7 +90,7 @@ export const updateCategory = asyncWrapper(async (req, res, next) => {
   res.json({
     status: SUCCESS,
     message: "Category updated successfully",
-    data: { category },
+    data:  category ,
   });
 });
 
