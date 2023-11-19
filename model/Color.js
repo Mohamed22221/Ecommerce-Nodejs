@@ -11,13 +11,6 @@ const colorSchema = new Schema(
       default: "https://placehold.co/400",
       required: true,
     },
-    products: [
-      {
-        type: Object,
-        ref: "Product",
-        required: true,
-      },
-    ],
     userID: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

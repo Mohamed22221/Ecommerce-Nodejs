@@ -20,11 +20,6 @@ var colorSchema = new Schema({
     "default": "https://placehold.co/400",
     required: true
   },
-  products: [{
-    type: Object,
-    ref: "Product",
-    required: true
-  }],
   userID: {
     type: _mongoose["default"].Schema.Types.ObjectId,
     required: true,
