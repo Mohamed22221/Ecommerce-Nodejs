@@ -30,5 +30,5 @@ const brandSchema = new Schema(
 );
 
 //compile the schema to model
-const Brand = mongoose.model("Category", brandSchema);
+const Brand = mongoose.model("Brand", brandSchema);
 export default Brand;
