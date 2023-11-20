@@ -23,6 +23,8 @@ var _brandsRoutes = _interopRequireDefault(require("../routes/brandsRoutes.js"))
 
 var _colorsRoutes = _interopRequireDefault(require("../routes/colorsRoutes.js"));
 
+var _reviewsRoutes = _interopRequireDefault(require("../routes/reviewsRoutes.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 //import express routes
@@ -38,7 +40,8 @@ app.use("/api/v1/users/", _usersRoutes["default"]);
 app.use("/api/v1/products/", _productsRoutes["default"]);
 app.use("/api/v1/categories/", _CategoriesRoutes["default"]);
 app.use("/api/v1/brands/", _brandsRoutes["default"]);
-app.use("/api/v1/colors/", _colorsRoutes["default"]); // global middleware for handel error
+app.use("/api/v1/colors/", _colorsRoutes["default"]);
+app.use("/api/v1/reviews/", _reviewsRoutes["default"]); // global middleware for handel error
 
 app.use(function (error, req, res, next) {
   res.status(error.statusCode || 400).json({

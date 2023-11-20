@@ -8,6 +8,7 @@ import productsRoutes from "../routes/productsRoutes..js";
 import categoriesRoutes from "../routes/CategoriesRoutes.js";
 import brandsRoutes from "../routes/brandsRoutes.js";
 import colorsRoutes from "../routes/colorsRoutes.js";
+import reviewsRoutes from "../routes/reviewsRoutes.js";
 // setup local env
 dotenv.config();
 //db connect
@@ -21,8 +22,7 @@ app.use("/api/v1/products/", productsRoutes);
 app.use("/api/v1/categories/", categoriesRoutes);
 app.use("/api/v1/brands/", brandsRoutes);
 app.use("/api/v1/colors/", colorsRoutes);
-
-
+app.use("/api/v1/reviews/", reviewsRoutes);
 
 // global middleware for handel error
 app.use((error, req, res, next) => {

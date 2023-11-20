@@ -70,7 +70,7 @@ var productSchema = new Schema({
   }
 }); //compile the schema to model
 
-var User = _mongoose["default"].model("Product", productSchema);
+var Product = _mongoose["default"].model("Product", productSchema);
 
-var _default = User;
+var _default = Product;
 exports["default"] = _default;
