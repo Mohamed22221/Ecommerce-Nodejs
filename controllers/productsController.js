@@ -59,7 +59,7 @@ export const getAllProducts = asyncWrapper(async (req, res) => {
     });
   }
   //return products
-  const products = await productQuiry;
+  const products = await productQuiry.populate('reviews');
 
   res.json({
     status: SUCCESS,
@@ -143,7 +143,7 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
 
 export const getProduct = asyncWrapper(async (req, res, next) => {
   const dynamicId = req.params.id;
-  const product = await Product.findById(dynamicId);
+  const product = await Product.findById(dynamicId).populate('reviews');
 
   if (!product) {
     const error = sendError.create(404, FAIL, "Product not found ");
