@@ -123,11 +123,11 @@ export const createProduct = asyncWrapper(async (req, res, next) => {
     totalQty,
   });
   // push product in the same category
-  categoryFound.products.push({ name, brand, category });
+  categoryFound.products.push({userID : req.currentUser._id , name, brand, category });
   await categoryFound.save();
 
   // push product in the same brand
-  brandFound.products.push({ name, brand, category });
+  brandFound.products.push({userID :  req.currentUser._id , name, brand, category });
   await brandFound.save();
 
   res.status(201).json({
