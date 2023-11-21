@@ -77,7 +77,7 @@ productSchema.virtual("averageReviews").get(function() {
   product?.reviews?.forEach((review) => {
     totalRating += review?.rating
   })
-  
+
   return Number(totalRating / product.reviews.length) || 0
 })
 //compile the schema to model
